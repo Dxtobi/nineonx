@@ -184,7 +184,7 @@ const getByCategory = async (category) => {
  */
 
 const getDownloadLink= async (url) => {
-  let data = [];
+  let data = '';
   const axiosResponse = await axios.request({
     method: 'GET',
     url: `${url}`,
@@ -193,19 +193,29 @@ const getDownloadLink= async (url) => {
     },
   });
   const $ = cheerio.load(axiosResponse.data);
-  const regex = /url\((.*?)\)/;
 
-  $('.post-element').each((index, element) => {
-    const title = $(element).find('.thumb-title a').text().trim();
-    const info_link = $(element).find('a').attr('href');
-    const match = $(element).find('.slide').attr('style');
-    const type = $(element).find('.thumb-overlay a.post-cat').text().trim();
-
-    const imageUrl = regex.exec(match)[1];
-
-    data.push({ imageUrl, info_link, title, type });
+  try {
+  
+    let info_link =''//= $('.container').find('.download-timer a span').text();
+    $('script').each((i, elem) => {
+      const scriptContent = $(elem).html();
+      const hrefMatch = scriptContent.match(/href='([^']*)'/);
+      if (hrefMatch && hrefMatch[1]) {
+        info_link = hrefMatch[1];
+      }
   });
-  return data;
+    return info_link
+  } catch (error) {
+    // @ts-ignore
+    console.error("<<<<☣>>>>", error.message);
+    return {}
+  }
+  
+//   const info_link = $('.container').find('.download-timer a span').text();
+//   data=info_link
+// console.log(info_link)
+  
+//   return axiosResponse.data;
 };
 module.exports = {
     getDetails, searchMovies, getMovies, getByCategory, getDownloadLink

@@ -1,5 +1,5 @@
 const express = require('express');
-const { get_headers, search_headers, get_full_details, get_by_category } = require('./series.controller.js');
+const { get_headers, search_headers, get_full_details, get_by_category, get_download_link } = require('./series.controller.js');
 const api_cache = require('apicache')
 
 let cache = api_cache.middleware
@@ -223,7 +223,60 @@ series_router.get('/search', cache('30 minutes'), search_headers);
  *                       download_link:
  *                         type: string
  *                         description: The URL to download the episode (if available).
+ *     500:
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   description: An error message.
+ *                 message:
+ *                   type: string
+ *                   description: The original error message.
  */
 series_router.get('/get-details', cache('30 minutes'), get_full_details);
+
+/**
+ * @swagger
+ *  /api/v1/movies/get-download-link:
+ *   get:
+ *     summary: Get the downloadable link of a movie.
+ *     tags:
+ *       - Movies
+ *     parameters:
+ *       - in: query
+ *         name: url
+ *         required: true
+ *         type: string
+ *         description: The URL of the movie details page.
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 download link:
+ *                   type: string
+ *                   description: The movie plot description (if available).
+ *     500:
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   description: An error message.
+ *                 message:
+ *                   type: string
+ *                   description: The original error message.
+ */
+series_router.get('/get-download-link', get_download_link);
 
 module.exports = series_router;
