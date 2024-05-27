@@ -2,7 +2,8 @@ const express = require('express');
 const { get_headers, search_headers, get_full_details, get_by_category, get_download_link } = require('./series.controller.js');
 const api_cache = require('apicache')
 
-let cache = api_cache.middleware
+// let cache = api_cache.middleware
+// cache('30 minutes') add this as midle route
 const series_router = express.Router();
 /**
  * @swagger
@@ -61,7 +62,7 @@ const series_router = express.Router();
  *                   description: The original error message.
  *
  *  */
-series_router.get('/get-movies/:tag', cache('30 minutes'), get_headers);
+series_router.get('/get-movies/:tag',  get_headers);
 /**
  * @swagger
  * /api/v1/movies/category/{category}:
@@ -119,7 +120,7 @@ series_router.get('/get-movies/:tag', cache('30 minutes'), get_headers);
  *                   description: The original error message.
  *
  *  */
-series_router.get('/category/:category', cache('30 minutes'), get_by_category);
+series_router.get('/category/:category', get_by_category);
 /**
  * @swagger
  *  /api/v1/movies/search:
@@ -173,7 +174,7 @@ series_router.get('/category/:category', cache('30 minutes'), get_by_category);
  *                   type: string
  *                   description: The original error message.
  */
-series_router.get('/search', cache('30 minutes'), search_headers);
+series_router.get('/search',  search_headers);
 
 /**
  * @swagger
@@ -237,7 +238,7 @@ series_router.get('/search', cache('30 minutes'), search_headers);
  *                   type: string
  *                   description: The original error message.
  */
-series_router.get('/get-details', cache('30 minutes'), get_full_details);
+series_router.get('/get-details',  get_full_details);
 
 /**
  * @swagger

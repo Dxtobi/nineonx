@@ -35,7 +35,7 @@ const getMovies = async (tag) => {
 
       const imageUrl = regex.exec(match)[1];
 
-      data.push({ imageUrl, info_link, title, type });
+      data.push({ imageUrl:removeResizeFromImageUrl(imageUrl), info_link, title, type });
     });
     return data;
   };
@@ -68,7 +68,7 @@ const getMovies = async (tag) => {
       const info_link = $(element).find('a').attr('href');
       const match = $(element).find('.slide').attr('style');
       const imageUrl = regex.exec(match)[1];
-      data.push({ imageUrl, info_link, title });
+      data.push({ imageUrl:removeResizeFromImageUrl(imageUrl), info_link, title });
     });
     return data;
   };
@@ -90,7 +90,7 @@ const getMovies = async (tag) => {
    *       - `download_link`: The URL to download the episode (if available, extracted from a link with the class "fa-fa-download").
    */
 const getDetails = async (url) => {
-      console.log(url)
+     // console.log(url)
       let data = {
           details: '',
           imageUrl: '',
@@ -117,7 +117,6 @@ const getDetails = async (url) => {
         const details = $(element).find('blockquote p').text().trim();
         const youtube = $(element).find('div.tie-fluid-width-video-wrapper iframe').attr('src');
       //  const imageUrl = regex.exec(match)[1];
-      console.log(youtube)
       $(element).find('p').each((i, p) => {
           let episode = $(p).find('em').text().trim();
           let download_link = $(p).find('a.fa-fa-download').attr('href')
@@ -127,8 +126,10 @@ const getDetails = async (url) => {
   
       });
       episodes = episodes.filter((e)=>e.episode!="" || e.download_link)
-        data={ imageUrl, info_link, title, details,youtube, episodes };
+        data={ imageUrl:removeResizeFromImageUrl(imageUrl), info_link, title, details,youtube, episodes };
       });
+     // console.log(data)
+
       return data;
 };
   
@@ -161,11 +162,11 @@ const getByCategory = async (category) => {
     const title = $(element).find('.thumb-title a').text().trim();
     const info_link = $(element).find('a').attr('href');
     const match = $(element).find('.slide').attr('style');
-    const type = $(element).find('.thumb-overlay a.post-cat').text().trim();
+    const type = category.replace(/-/g, " ")
 
     const imageUrl = regex.exec(match)[1];
 
-    data.push({ imageUrl, info_link, title, type });
+    data.push({ imageUrl:removeResizeFromImageUrl(imageUrl), info_link, title, type });
   });
   return data;
 };
@@ -204,6 +205,7 @@ const getDownloadLink= async (url) => {
         info_link = hrefMatch[1];
       }
   });
+  console.log(info_link)
     return info_link
   } catch (error) {
     // @ts-ignore
@@ -213,10 +215,21 @@ const getDownloadLink= async (url) => {
   
 //   const info_link = $('.container').find('.download-timer a span').text();
 //   data=info_link
-// console.log(info_link)
   
 //   return axiosResponse.data;
 };
+
+function removeResizeFromImageUrl(imageUrl) {
+  // Use URL object to parse the image URL
+  const url = new URL(imageUrl);
+
+  // Remove the 'resize' query parameter
+  url.searchParams.delete('resize');
+  //url.searchParams.delete('ssl')
+  //Return the modified URL string
+  return url.toString();
+}
+
 module.exports = {
     getDetails, searchMovies, getMovies, getByCategory, getDownloadLink
 }

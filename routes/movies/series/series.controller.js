@@ -40,7 +40,7 @@ exports.get_full_details = asyncHandler(async (req, res, next) => {
     return res.status(200).json({ details });
   } catch (error) {
     //console.log(error.message);
-    return res.json({ error: 'something went wrong...', message: error.message });
+    return res.json({ error: 'something went wrong', message: error.message });
   }
 });
 
@@ -49,7 +49,7 @@ exports.get_download_link = asyncHandler(async (req, res, next) => {
     const url = await getDownloadLink(req.query.url);
     return res.status(200).json({ url });
   } catch (error) {
-    //console.log(error.message);
+    console.log(error.message,req.query.url);
     return res.json({ error: 'something went wrong...', message: error.message });
   }
 });
