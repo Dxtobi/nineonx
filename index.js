@@ -51,12 +51,13 @@ app.get('/', (req, res) => {
   return res.status(200).send({ message: 'request received' });
 });
 
-mongoose.connect(mongoURL).then(() => {
-  app.listen(PORT, () => {
-    console.log(`App running on Port: http://localhost:${PORT}`);
-  });  
-  console.log('DB connected.....');
-}).catch((err) => {
-  console.log('could not connect to database server will not started', err.message);
+// mongoose.connect(mongoURL).then(() => {
+    
+//   console.log('DB connected.....');
+// }).catch((err) => {
+//   console.log('could not connect to database server will not started', err.message);
+// });
+app.listen(PORT, () => {
+  console.log(`App running on Port: http://localhost:${PORT}`);
 });
 
